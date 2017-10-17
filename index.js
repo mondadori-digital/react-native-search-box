@@ -26,6 +26,7 @@ class Search extends PureComponent {
     const { width } = Dimensions.get('window');
     this.contentWidth = width;
     this.middleWidth = width / 2;
+    this.cancelButtonWidth = this.props.cancelButtonWidth || 70;
 
     /**
      * Animated values
@@ -171,7 +172,7 @@ class Search extends PureComponent {
     return new Promise((resolve, reject) => {
       Animated.parallel([
         Animated.timing(this.inputFocusWidthAnimated, {
-          toValue: this.contentWidth - 70,
+          toValue: this.contentWidth - this.cancelButtonWidth,
           duration: 200
         }).start(),
         Animated.timing(this.btnCancelAnimated, {
