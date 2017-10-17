@@ -20,7 +20,7 @@ class Search extends PureComponent {
     super(props);
 
     this.state = {
-      keyword: '',
+      keyword: props.value || '',
       expanded: false
     };
     const { width } = Dimensions.get('window');
