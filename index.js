@@ -21,7 +21,7 @@ class Search extends PureComponent {
 
     this.state = {
       keyword: props.value || '',
-      expanded: false
+      expanded: (this.props.autoExpand && props.value) || false,
     };
     const { width } = Dimensions.get('window');
     this.contentWidth = width;
@@ -59,7 +59,6 @@ class Search extends PureComponent {
      */
     this.placeholder = this.props.placeholder || 'Search';
     this.cancelTitle = this.props.cancelTitle || 'Cancel';
-    this.autoFocus =  this.props.autoFocus || false;
 
     /**
      * Shadow
@@ -69,14 +68,7 @@ class Search extends PureComponent {
     );
     this.shadowHeight = this.props.shadowOffsetHeightCollapsed;
   }
-  
-  componentDidMount() {
-    if (this.autoFocus) {
-      this.setState({ expanded: true });
-      this.refs.input_keyword._component.focus();
-    }
-  }
-  
+
   onLayout = event => {
     const contentWidth = event.nativeEvent.layout.width;
     this.contentWidth = contentWidth;
