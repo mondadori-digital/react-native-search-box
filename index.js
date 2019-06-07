@@ -22,7 +22,7 @@ class Search extends PureComponent {
 
     this.state = {
       keyword: props.value || '',
-      expanded: (this.autoExpand && props.value) || false,
+      expanded: false,
     };
     const { width } = Dimensions.get('window');
     this.contentWidth = width;
@@ -76,6 +76,10 @@ class Search extends PureComponent {
     if(this.autoFocus) {
       this.setState({expanded: true})
       this.refs.input_keyword._component.focus();
+    }
+
+    if(this.autoExpand) {
+      this.setState({expanded: true})
     }
   }
 
