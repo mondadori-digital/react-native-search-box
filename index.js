@@ -25,7 +25,7 @@ class Search extends PureComponent {
       expanded: false,
     };
     const { width } = Dimensions.get('window');
-    this.contentWidth = width;
+    this.contentWidth = props.contentWidth || width;
     this.middleWidth = width / 2;
     this.cancelButtonWidth = this.props.cancelButtonWidth || 70;
 
