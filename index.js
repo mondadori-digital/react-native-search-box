@@ -9,7 +9,7 @@ import {
   Keyboard,
   Image,
   View,
-  ViewPropTypes,
+  ViewPropTypes
 } from 'react-native';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -22,7 +22,7 @@ class Search extends PureComponent {
 
     this.state = {
       keyword: props.value || '',
-      expanded: false,
+      expanded: false
     };
     const { width } = Dimensions.get('window');
     this.contentWidth = props.contentWidth || width;
@@ -60,8 +60,8 @@ class Search extends PureComponent {
      */
     this.placeholder = this.props.placeholder || 'Search';
     this.cancelTitle = this.props.cancelTitle || 'Cancel';
-    this.autoFocus =  this.props.autoFocus || false;
-    this.autoExpand =  this.props.autoExpand || false;
+    this.autoFocus = this.props.autoFocus || false;
+    this.autoExpand = this.props.autoExpand || false;
 
     /**
      * Shadow
@@ -73,13 +73,20 @@ class Search extends PureComponent {
   }
 
   componentDidMount() {
-    if(this.autoFocus) {
-      this.setState({expanded: true})
+    if (this.autoFocus) {
+      this.setState({ expanded: true });
       this.refs.input_keyword._component.focus();
     }
 
-    if(this.autoExpand) {
-      this.setState({expanded: true})
+    if (this.autoExpand) {
+      this.setState({ expanded: true });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { value } = this.props;
+    if (prevProps.value !== value && this.state.keyword !== value) {
+      this.setState({ keyword: value });
     }
   }
 
@@ -95,9 +102,9 @@ class Search extends PureComponent {
   };
 
   /**
- * onSearch
- * async await
- */
+   * onSearch
+   * async await
+   */
   onSearch = async () => {
     this.props.beforeSearch &&
       (await this.props.beforeSearch(this.state.keyword));
@@ -110,9 +117,9 @@ class Search extends PureComponent {
   };
 
   /**
- * onChangeText
- * async await
- */
+   * onChangeText
+   * async await
+   */
   onChangeText = async text => {
     await this.setState({ keyword: text });
     await new Promise((resolve, reject) => {
@@ -126,9 +133,9 @@ class Search extends PureComponent {
   };
 
   /**
-     * onFocus
-     * async await
-     */
+   * onFocus
+   * async await
+   */
   onFocus = async () => {
     this.props.beforeFocus && (await this.props.beforeFocus());
     this.refs.input_keyword._component.isFocused &&
@@ -142,18 +149,18 @@ class Search extends PureComponent {
   };
 
   /**
-     * focus
-     * async await
-     */
+   * focus
+   * async await
+   */
   focus = async (text = '') => {
     await this.setState({ keyword: text });
     await this.refs.input_keyword._component.focus();
   };
 
   /**
-     * onDelete
-     * async await
-     */
+   * onDelete
+   * async await
+   */
   onDelete = async () => {
     this.props.beforeDelete && (await this.props.beforeDelete());
     await new Promise((resolve, reject) => {
@@ -168,9 +175,9 @@ class Search extends PureComponent {
   };
 
   /**
-     * onCancel
-     * async await
-     */
+   * onCancel
+   * async await
+   */
   onCancel = async () => {
     this.props.beforeCancel && (await this.props.beforeCancel());
     await this.setState({ keyword: '' });
@@ -263,8 +270,7 @@ class Search extends PureComponent {
             backgroundColor: this.props.backgroundColor
           }
         ]}
-        onLayout={this.onLayout}
-      >
+        onLayout={this.onLayout}>
         <AnimatedTextInput
           ref="input_keyword"
           style={[
@@ -308,63 +314,65 @@ class Search extends PureComponent {
           underlineColorAndroid="transparent"
         />
         <TouchableWithoutFeedback onPress={this.onFocus}>
-          {this.props.iconSearch
-            ? <Animated.View
-                style={[styles.iconSearch, { left: this.iconSearchAnimated }]}
-              >
-                {this.props.iconSearch}
-              </Animated.View>
-            : <Animated.Image
-                source={require('./img/search.png')}
-                style={[
-                  styles.iconSearch,
-                  styles.iconSearchDefault,
-                  this.props.tintColorSearch && {
-                    tintColor: this.props.tintColorSearch
-                  },
-                  {
-                    left: this.iconSearchAnimated
-                  }
-                ]}
-              />}
+          {this.props.iconSearch ? (
+            <Animated.View
+              style={[styles.iconSearch, { left: this.iconSearchAnimated }]}>
+              {this.props.iconSearch}
+            </Animated.View>
+          ) : (
+            <Animated.Image
+              source={require('./img/search.png')}
+              style={[
+                styles.iconSearch,
+                styles.iconSearchDefault,
+                this.props.tintColorSearch && {
+                  tintColor: this.props.tintColorSearch
+                },
+                {
+                  left: this.iconSearchAnimated
+                }
+              ]}
+            />
+          )}
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={this.onDelete}>
-          {this.props.iconDelete
-            ? <Animated.View
-                style={[
-                  styles.iconDelete,
-                  this.props.positionRightDelete && {
-                    right: this.props.positionRightDelete
-                  },
-                  { opacity: this.iconDeleteAnimated }
-                ]}
-              >
-                {this.props.iconDelete}
-              </Animated.View>
-            : <Animated.Image
-                source={require('./img/delete.png')}
-                style={[
-                  styles.iconDelete,
-                  styles.iconDeleteDefault,
-                  this.props.tintColorDelete && {
-                    tintColor: this.props.tintColorDelete
-                  },
-                  this.props.positionRightDelete && {
-                    right: this.props.positionRightDelete
-                  },
-                  { opacity: this.iconDeleteAnimated }
-                ]}
-              />}
+          {this.props.iconDelete ? (
+            <Animated.View
+              style={[
+                styles.iconDelete,
+                this.props.positionRightDelete && {
+                  right: this.props.positionRightDelete
+                },
+                { opacity: this.iconDeleteAnimated }
+              ]}>
+              {this.props.iconDelete}
+            </Animated.View>
+          ) : (
+            <Animated.Image
+              source={require('./img/delete.png')}
+              style={[
+                styles.iconDelete,
+                styles.iconDeleteDefault,
+                this.props.tintColorDelete && {
+                  tintColor: this.props.tintColorDelete
+                },
+                this.props.positionRightDelete && {
+                  right: this.props.positionRightDelete
+                },
+                { opacity: this.iconDeleteAnimated }
+              ]}
+            />
+          )}
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={this.onCancel}>
           <Animated.View
             style={[
               styles.cancelButton,
               this.props.cancelButtonStyle && this.props.cancelButtonStyle,
-              this.props.cancelButtonViewStyle && this.props.cancelButtonViewStyle,
+              this.props.cancelButtonViewStyle &&
+                this.props.cancelButtonViewStyle,
               { left: this.btnCancelAnimated }
-            ]}
-          >
+            ]}>
             <Text
               style={[
                 styles.cancelButtonText,
@@ -372,9 +380,9 @@ class Search extends PureComponent {
                   color: this.props.titleCancelColor
                 },
                 this.props.cancelButtonStyle && this.props.cancelButtonStyle,
-                this.props.cancelButtonTextStyle && this.props.cancelButtonTextStyle,
-              ]}
-            >
+                this.props.cancelButtonTextStyle &&
+                  this.props.cancelButtonTextStyle
+              ]}>
               {this.cancelTitle}
             </Text>
           </Animated.View>
@@ -441,48 +449,48 @@ const styles = {
  */
 Search.propTypes = {
   /**
-     * onFocus
-     * return a Promise
-     * beforeFocus, onFocus, afterFocus
-     */
+   * onFocus
+   * return a Promise
+   * beforeFocus, onFocus, afterFocus
+   */
   beforeFocus: PropTypes.func,
   onFocus: PropTypes.func,
   afterFocus: PropTypes.func,
 
   /**
-     * onSearch
-     * return a Promise
-     */
+   * onSearch
+   * return a Promise
+   */
   beforeSearch: PropTypes.func,
   onSearch: PropTypes.func,
   afterSearch: PropTypes.func,
 
   /**
-     * onChangeText
-     * return a Promise
-     */
+   * onChangeText
+   * return a Promise
+   */
   onChangeText: PropTypes.func,
 
   /**
-     * onCancel
-     * return a Promise
-     */
+   * onCancel
+   * return a Promise
+   */
   beforeCancel: PropTypes.func,
   onCancel: PropTypes.func,
   afterCancel: PropTypes.func,
 
   /**
-     * async await
-     * return a Promise
-     * beforeDelete, onDelete, afterDelete
-     */
+   * async await
+   * return a Promise
+   * beforeDelete, onDelete, afterDelete
+   */
   beforeDelete: PropTypes.func,
   onDelete: PropTypes.func,
   afterDelete: PropTypes.func,
 
   /**
-     * styles
-     */
+   * styles
+   */
   backgroundColor: PropTypes.string,
   placeholderTextColor: PropTypes.string,
   titleCancelColor: PropTypes.string,
@@ -500,8 +508,8 @@ Search.propTypes = {
   cancelButtonViewStyle: ViewPropTypes.style,
 
   /**
-     * text input
-     */
+   * text input
+   */
   placeholder: PropTypes.string,
   cancelTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   iconDelete: PropTypes.object,
@@ -518,8 +526,8 @@ Search.propTypes = {
   keyboardShouldPersist: PropTypes.bool,
 
   /**
-     * Positioning
-     */
+   * Positioning
+   */
   positionRightDelete: PropTypes.number,
   searchIconCollapsedMargin: PropTypes.number,
   searchIconExpandedMargin: PropTypes.number,
@@ -527,8 +535,8 @@ Search.propTypes = {
   placeholderExpandedMargin: PropTypes.number,
 
   /**
-     * Shadow
-     */
+   * Shadow
+   */
   shadowOffsetHeightCollapsed: PropTypes.number,
   shadowOffsetHeightExpanded: PropTypes.number,
   shadowOffsetWidth: PropTypes.number,
