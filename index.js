@@ -9,7 +9,7 @@ import {
   Keyboard,
   Image,
   View,
-  ViewPropTypes
+  ViewPropTypes,
 } from 'react-native';
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
@@ -22,7 +22,7 @@ class Search extends PureComponent {
 
     this.state = {
       keyword: props.value || '',
-      expanded: false
+      expanded: false,
     };
     const { width } = Dimensions.get('window');
     this.contentWidth = props.contentWidth || width;
@@ -75,7 +75,7 @@ class Search extends PureComponent {
   componentDidMount() {
     if (this.autoFocus) {
       this.setState({ expanded: true });
-      this.refs.input_keyword._component.focus();
+      this.refs.input_keyword.focus();
     }
 
     if (this.autoExpand) {
@@ -90,7 +90,7 @@ class Search extends PureComponent {
     }
   }
 
-  onLayout = event => {
+  onLayout = (event) => {
     const contentWidth = event.nativeEvent.layout.width;
     this.contentWidth = contentWidth;
     this.middleWidth = contentWidth / 2;
@@ -120,12 +120,12 @@ class Search extends PureComponent {
    * onChangeText
    * async await
    */
-  onChangeText = async text => {
+  onChangeText = async (text) => {
     await this.setState({ keyword: text });
     await new Promise((resolve, reject) => {
       Animated.timing(this.iconDeleteAnimated, {
         toValue: text.length > 0 ? 1 : 0,
-        duration: 200
+        duration: 200,
       }).start(() => resolve());
     });
     this.props.onChangeText &&
@@ -138,9 +138,9 @@ class Search extends PureComponent {
    */
   onFocus = async () => {
     this.props.beforeFocus && (await this.props.beforeFocus());
-    this.refs.input_keyword._component.isFocused &&
-      (await this.refs.input_keyword._component.focus());
-    await this.setState(prevState => {
+    this.refs.input_keyword.isFocused &&
+      (await this.refs.input_keyword.focus());
+    await this.setState((prevState) => {
       return { expanded: !prevState.expanded };
     });
     await this.expandAnimation();
@@ -154,7 +154,7 @@ class Search extends PureComponent {
    */
   focus = async (text = '') => {
     await this.setState({ keyword: text });
-    await this.refs.input_keyword._component.focus();
+    await this.refs.input_keyword.focus();
   };
 
   /**
@@ -166,7 +166,7 @@ class Search extends PureComponent {
     await new Promise((resolve, reject) => {
       Animated.timing(this.iconDeleteAnimated, {
         toValue: 0,
-        duration: 200
+        duration: 200,
       }).start(() => resolve());
     });
     await this.setState({ keyword: '' });
@@ -181,7 +181,7 @@ class Search extends PureComponent {
   onCancel = async () => {
     this.props.beforeCancel && (await this.props.beforeCancel());
     await this.setState({ keyword: '' });
-    await this.setState(prevState => {
+    await this.setState((prevState) => {
       return { expanded: !prevState.expanded };
     });
     await this.collapseAnimation(true);
@@ -194,28 +194,28 @@ class Search extends PureComponent {
       Animated.parallel([
         Animated.timing(this.inputFocusWidthAnimated, {
           toValue: this.contentWidth - this.cancelButtonWidth,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.btnCancelAnimated, {
           toValue: 10,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.inputFocusPlaceholderAnimated, {
           toValue: this.props.placeholderExpandedMargin,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.iconSearchAnimated, {
           toValue: this.props.searchIconExpandedMargin,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.iconDeleteAnimated, {
           toValue: this.state.keyword.length > 0 ? 1 : 0,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.shadowOpacityAnimated, {
           toValue: this.props.shadowOpacityExpanded,
-          duration: 200
-        }).start()
+          duration: 200,
+        }).start(),
       ]);
       this.shadowHeight = this.props.shadowOffsetHeightExpanded;
       resolve();
@@ -228,32 +228,32 @@ class Search extends PureComponent {
         this.props.keyboardShouldPersist === false ? Keyboard.dismiss() : null,
         Animated.timing(this.inputFocusWidthAnimated, {
           toValue: this.contentWidth - 10,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.btnCancelAnimated, {
           toValue: this.contentWidth,
-          duration: 200
+          duration: 200,
         }).start(),
         this.props.keyboardShouldPersist === false
           ? Animated.timing(this.inputFocusPlaceholderAnimated, {
               toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
-              duration: 200
+              duration: 200,
             }).start()
           : null,
         this.props.keyboardShouldPersist === false || isForceAnim === true
           ? Animated.timing(this.iconSearchAnimated, {
               toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
-              duration: 200
+              duration: 200,
             }).start()
           : null,
         Animated.timing(this.iconDeleteAnimated, {
           toValue: 0,
-          duration: 200
+          duration: 200,
         }).start(),
         Animated.timing(this.shadowOpacityAnimated, {
           toValue: this.props.shadowOpacityCollapsed,
-          duration: 200
-        }).start()
+          duration: 200,
+        }).start(),
       ]);
       this.shadowHeight = this.props.shadowOffsetHeightCollapsed;
       resolve();
@@ -263,39 +263,40 @@ class Search extends PureComponent {
   render() {
     return (
       <Animated.View
-        ref="searchContainer"
+        ref='searchContainer'
         style={[
           styles.container,
           this.props.backgroundColor && {
-            backgroundColor: this.props.backgroundColor
-          }
+            backgroundColor: this.props.backgroundColor,
+          },
         ]}
-        onLayout={this.onLayout}>
+        onLayout={this.onLayout}
+      >
         <AnimatedTextInput
-          ref="input_keyword"
+          ref='input_keyword'
           style={[
             styles.input,
             this.props.placeholderTextColor && {
-              color: this.props.placeholderTextColor
+              color: this.props.placeholderTextColor,
             },
             this.props.inputStyle && this.props.inputStyle,
             this.props.inputHeight && { height: this.props.inputHeight },
             this.props.inputBorderRadius && {
-              borderRadius: this.props.inputBorderRadius
+              borderRadius: this.props.inputBorderRadius,
             },
             {
               width: this.inputFocusWidthAnimated,
-              paddingLeft: this.inputFocusPlaceholderAnimated
+              paddingLeft: this.inputFocusPlaceholderAnimated,
             },
             this.props.shadowVisible && {
               shadowOffset: {
                 width: this.props.shadowOffsetWidth,
-                height: this.shadowHeight
+                height: this.shadowHeight,
               },
               shadowColor: this.props.shadowColor,
               shadowOpacity: this.shadowOpacityAnimated,
-              shadowRadius: this.props.shadowRadius
-            }
+              shadowRadius: this.props.shadowRadius,
+            },
           ]}
           editable={this.props.editable}
           value={this.state.keyword}
@@ -311,12 +312,13 @@ class Search extends PureComponent {
           keyboardType={this.props.keyboardType || 'default'}
           autoCapitalize={this.props.autoCapitalize}
           onFocus={this.onFocus}
-          underlineColorAndroid="transparent"
+          underlineColorAndroid='transparent'
         />
         <TouchableWithoutFeedback onPress={this.onFocus}>
           {this.props.iconSearch ? (
             <Animated.View
-              style={[styles.iconSearch, { left: this.iconSearchAnimated }]}>
+              style={[styles.iconSearch, { left: this.iconSearchAnimated }]}
+            >
               {this.props.iconSearch}
             </Animated.View>
           ) : (
@@ -326,11 +328,11 @@ class Search extends PureComponent {
                 styles.iconSearch,
                 styles.iconSearchDefault,
                 this.props.tintColorSearch && {
-                  tintColor: this.props.tintColorSearch
+                  tintColor: this.props.tintColorSearch,
                 },
                 {
-                  left: this.iconSearchAnimated
-                }
+                  left: this.iconSearchAnimated,
+                },
               ]}
             />
           )}
@@ -341,10 +343,11 @@ class Search extends PureComponent {
               style={[
                 styles.iconDelete,
                 this.props.positionRightDelete && {
-                  right: this.props.positionRightDelete
+                  right: this.props.positionRightDelete,
                 },
-                { opacity: this.iconDeleteAnimated }
-              ]}>
+                { opacity: this.iconDeleteAnimated },
+              ]}
+            >
               {this.props.iconDelete}
             </Animated.View>
           ) : (
@@ -354,12 +357,12 @@ class Search extends PureComponent {
                 styles.iconDelete,
                 styles.iconDeleteDefault,
                 this.props.tintColorDelete && {
-                  tintColor: this.props.tintColorDelete
+                  tintColor: this.props.tintColorDelete,
                 },
                 this.props.positionRightDelete && {
-                  right: this.props.positionRightDelete
+                  right: this.props.positionRightDelete,
                 },
-                { opacity: this.iconDeleteAnimated }
+                { opacity: this.iconDeleteAnimated },
               ]}
             />
           )}
@@ -371,18 +374,20 @@ class Search extends PureComponent {
               this.props.cancelButtonStyle && this.props.cancelButtonStyle,
               this.props.cancelButtonViewStyle &&
                 this.props.cancelButtonViewStyle,
-              { left: this.btnCancelAnimated }
-            ]}>
+              { left: this.btnCancelAnimated },
+            ]}
+          >
             <Text
               style={[
                 styles.cancelButtonText,
                 this.props.titleCancelColor && {
-                  color: this.props.titleCancelColor
+                  color: this.props.titleCancelColor,
                 },
                 this.props.cancelButtonStyle && this.props.cancelButtonStyle,
                 this.props.cancelButtonTextStyle &&
-                  this.props.cancelButtonTextStyle
-              ]}>
+                  this.props.cancelButtonTextStyle,
+              ]}
+            >
               {this.cancelTitle}
             </Text>
           </Animated.View>
@@ -399,7 +404,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 5
+    padding: 5,
   },
   input: {
     height: containerHeight - 10,
@@ -409,7 +414,7 @@ const styles = {
     borderColor: '#444',
     backgroundColor: '#f7f7f7',
     borderRadius: 5,
-    fontSize: 13
+    fontSize: 13,
   },
   placeholderColor: 'grey',
   iconSearch: {
@@ -417,32 +422,32 @@ const styles = {
     position: 'absolute',
     top: middleHeight - 7,
     height: 14,
-    width: 14
+    width: 14,
   },
   iconSearchDefault: {
-    tintColor: 'grey'
+    tintColor: 'grey',
   },
   iconDelete: {
     position: 'absolute',
     right: 70,
     top: middleHeight - 7,
     height: 14,
-    width: 14
+    width: 14,
   },
   iconDeleteDefault: {
-    tintColor: 'grey'
+    tintColor: 'grey',
   },
   cancelButton: {
     justifyContent: 'center',
     alignItems: 'flex-start',
     backgroundColor: 'transparent',
     width: 60,
-    height: 50
+    height: 50,
   },
   cancelButtonText: {
     fontSize: 14,
-    color: '#fff'
-  }
+    color: '#fff',
+  },
 };
 /**
  * Props
@@ -499,7 +504,7 @@ Search.propTypes = {
   inputStyle: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.object,
-    ViewPropTypes.style
+    ViewPropTypes.style,
   ]),
   cancelButtonStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   onLayout: PropTypes.func,
@@ -544,7 +549,7 @@ Search.propTypes = {
   shadowOpacityCollapsed: PropTypes.number,
   shadowOpacityExpanded: PropTypes.number,
   shadowRadius: PropTypes.number,
-  shadowVisible: PropTypes.bool
+  shadowVisible: PropTypes.bool,
 };
 
 Search.defaultProps = {
@@ -562,7 +567,7 @@ Search.defaultProps = {
   shadowOpacityCollapsed: 0.12,
   shadowOpacityExpanded: 0.24,
   shadowRadius: 4,
-  shadowVisible: false
+  shadowVisible: false,
 };
 
 export default Search;
