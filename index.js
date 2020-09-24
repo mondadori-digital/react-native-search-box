@@ -75,7 +75,7 @@ class Search extends PureComponent {
   componentDidMount() {
     if (this.autoFocus) {
       this.setState({ expanded: true });
-      this.refs.input_keyword.focus();
+      this.input_keyword.focus();
     }
 
     if (this.autoExpand) {
@@ -126,6 +126,7 @@ class Search extends PureComponent {
       Animated.timing(this.iconDeleteAnimated, {
         toValue: text.length > 0 ? 1 : 0,
         duration: 200,
+        useNativeDriver: true,
       }).start(() => resolve());
     });
     this.props.onChangeText &&
@@ -138,8 +139,7 @@ class Search extends PureComponent {
    */
   onFocus = async () => {
     this.props.beforeFocus && (await this.props.beforeFocus());
-    this.refs.input_keyword.isFocused &&
-      (await this.refs.input_keyword.focus());
+    this.input_keyword.isFocused && (await this.input_keyword.focus());
     await this.setState((prevState) => {
       return { expanded: !prevState.expanded };
     });
@@ -154,7 +154,7 @@ class Search extends PureComponent {
    */
   focus = async (text = '') => {
     await this.setState({ keyword: text });
-    await this.refs.input_keyword.focus();
+    await this.input_keyword.focus();
   };
 
   /**
@@ -167,6 +167,7 @@ class Search extends PureComponent {
       Animated.timing(this.iconDeleteAnimated, {
         toValue: 0,
         duration: 200,
+        useNativeDriver: true,
       }).start(() => resolve());
     });
     await this.setState({ keyword: '' });
@@ -195,26 +196,32 @@ class Search extends PureComponent {
         Animated.timing(this.inputFocusWidthAnimated, {
           toValue: this.contentWidth - this.cancelButtonWidth,
           duration: 200,
+          useNativeDriver: false,
         }).start(),
         Animated.timing(this.btnCancelAnimated, {
           toValue: 10,
           duration: 200,
+          useNativeDriver: false,
         }).start(),
         Animated.timing(this.inputFocusPlaceholderAnimated, {
           toValue: this.props.placeholderExpandedMargin,
           duration: 200,
+          useNativeDriver: false,
         }).start(),
         Animated.timing(this.iconSearchAnimated, {
           toValue: this.props.searchIconExpandedMargin,
           duration: 200,
+          useNativeDriver: false,
         }).start(),
         Animated.timing(this.iconDeleteAnimated, {
           toValue: this.state.keyword.length > 0 ? 1 : 0,
           duration: 200,
+          useNativeDriver: true,
         }).start(),
         Animated.timing(this.shadowOpacityAnimated, {
           toValue: this.props.shadowOpacityExpanded,
           duration: 200,
+          useNativeDriver: true,
         }).start(),
       ]);
       this.shadowHeight = this.props.shadowOffsetHeightExpanded;
@@ -229,30 +236,36 @@ class Search extends PureComponent {
         Animated.timing(this.inputFocusWidthAnimated, {
           toValue: this.contentWidth - 10,
           duration: 200,
+          useNativeDriver: false,
         }).start(),
         Animated.timing(this.btnCancelAnimated, {
           toValue: this.contentWidth,
           duration: 200,
+          useNativeDriver: false,
         }).start(),
         this.props.keyboardShouldPersist === false
           ? Animated.timing(this.inputFocusPlaceholderAnimated, {
               toValue: this.middleWidth - this.props.placeholderCollapsedMargin,
               duration: 200,
+              useNativeDriver: false,
             }).start()
           : null,
         this.props.keyboardShouldPersist === false || isForceAnim === true
           ? Animated.timing(this.iconSearchAnimated, {
               toValue: this.middleWidth - this.props.searchIconCollapsedMargin,
               duration: 200,
+              useNativeDriver: false,
             }).start()
           : null,
         Animated.timing(this.iconDeleteAnimated, {
           toValue: 0,
           duration: 200,
+          useNativeDriver: true,
         }).start(),
         Animated.timing(this.shadowOpacityAnimated, {
           toValue: this.props.shadowOpacityCollapsed,
           duration: 200,
+          useNativeDriver: true,
         }).start(),
       ]);
       this.shadowHeight = this.props.shadowOffsetHeightCollapsed;
@@ -273,7 +286,9 @@ class Search extends PureComponent {
         onLayout={this.onLayout}
       >
         <AnimatedTextInput
-          ref='input_keyword'
+          ref={(ref) => {
+            this.input_keyword = ref;
+          }}
           style={[
             styles.input,
             this.props.placeholderTextColor && {
